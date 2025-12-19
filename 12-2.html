@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="statusText">サーバの状態をここに表示します</div>
+    <button id="loadBtn">状態を読み込む</button>
+    <script>
+        const statusText = document.getElementById("statusText");
+        const loadBtn = document.getElementById("loadBtn");
+
+        async function loadStatus() {
+        try {
+            // 1. /status にGETリクエストを送り、レスポンスを受け取る
+            const response = await fetch("/status");
+
+            // 2. レスポンスが正常か確認（ステータスコード200〜299か？）
+            if (!response.ok) {
+            throw new Error("HTTPエラー: " + response.status);
+            }
+
+            // 3. レスポンスデータからJSONデータを取り出す
+            const data = await response.json();
+
+            // 4. 取得したデータをDOMに反映する
+            // 例: 「サーバの状態: ok (v1.0)」
+            statusText.textContent = `サーバの状態: ${data.status} (v${data.version})`;
+        } catch (error) {
+            // 何か問題があればここに来る
+            console.error("エラー:", error);
+            statusText.textContent = "サーバの状態を取得できませんでした";
+        }
+        }
+
+        // ボタンを押したときに読み込む
+        loadBtn.addEventListener("click", loadStatus);
+
+    </script>
+</body>
+</html>

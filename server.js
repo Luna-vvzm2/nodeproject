@@ -28,6 +28,10 @@ app.get("/help", (req, res) => {
 
 app.use(express.static("public"));
 
+app.get("/status", (req, res) => {
+  res.json( { status: "ok" } );
+});
+
 // 5. サーバーを起動し、指定したポートでリクエストを待ち受ける
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
